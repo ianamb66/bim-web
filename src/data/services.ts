@@ -107,10 +107,12 @@ export const servicesData: Service[] = [
       "Arquitectura de información diseñada específicamente para generar confianza instantánea.",
     items: [
       "Desarrollo de sitios web estratégicos",
-      "(placeholder) Secciones de autoridad / prueba social",
-      "(placeholder) Optimización de narrativa y UX",
+      "Arquitectura de mensaje claro",
+      "Optimización para confianza",
+      "Producción audiovisual profesional",
+      "Desarrollo de podcasts propios",
     ],
     details:
-      "Placeholder: me falta el resto del texto que ibas a pegar aquí para dejarlo exacto.",
+      "Creamos activos digitales propios que funcionan como anclas de verdad. Desde podcasts de alta producción hasta hubs de contenido y documentales corporativos, te damos los canales necesarios para ser tu propio medio de comunicación y no depender de terceros.",
   },
 ];

@@ -1,257 +1,263 @@
-import React, { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDown,
-  ChevronRight,
-  Minimize2,
-  Maximize2,
-  Sun,
-  Moon,
   ArrowLeft,
   CheckCircle2,
-  Lightbulb,
+  ChevronRight,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Reveal } from "./components/Reveal";
 import { NeuronBackground } from "./components/NeuronBackground";
-import { servicesData } from "./data/services";
+import { servicesData, type Service } from "./data/services";
+
+type Theme = "dark" | "light";
+type View = "home" | "service" | "contact";
 
 function cn(...classes: Array<string | undefined | false | null>) {
   return classes.filter(Boolean).join(" ");
 }
 
-function IconButton({
-  onClick,
-  children,
-  title,
-}: {
-  onClick: () => void;
-  children: React.ReactNode;
-  title: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-3 text-white/80 hover:bg-white/10"
-    >
-      {children}
-    </button>
-  );
-}
-
 export default function App() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [compact, setCompact] = useState(false);
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [currentView, setCurrentView] = useState<View>("home");
+  const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
 
-  const activeService = useMemo(
-    () => servicesData.find((s) => s.id === activeId) ?? null,
-    [activeId]
-  );
+  const activeService = useMemo<Service | null>(() => {
+    if (!activeServiceId) return null;
+    return servicesData.find((s) => s.id === activeServiceId) ?? null;
+  }, [activeServiceId]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentView, activeServiceId]);
+
+  const toggleTheme = () => setTheme((p) => (p === "dark" ? "light" : "dark"));
+
+  const openService = (service: Service) => {
+    setActiveServiceId(service.id);
+    setCurrentView("service");
+  };
 
   const isDark = theme === "dark";
 
-  return (
-    <div className={cn("min-h-screen", isDark ? "bg-bim-bg" : "bg-white")}> 
-      <div className={cn("relative overflow-hidden", isDark ? "text-bim-text" : "text-black")}> 
+  // Clases dinámicas (como tu snippet)
+  const bgMain = isDark ? "bg-[#050505]" : "bg-gray-50";
+  const textMain = isDark ? "text-white" : "text-gray-900";
+  const bgCard = isDark ? "bg-[#0a0a0a]" : "bg-white";
+  const borderSubtle = isDark ? "border-white/10" : "border-gray-200";
+  const textMuted = isDark ? "text-gray-400" : "text-gray-600";
+
+  const ServiceView = () => {
+    if (!activeService) return null;
+    const Icon = activeService.icon;
+
+    return (
+      <div className={cn("min-h-screen pt-32 pb-24 px-8", bgMain, textMain)}>
+        <div className="container mx-auto max-w-4xl">
+          <button
+            onClick={() => setCurrentView("home")}
+            className="flex items-center gap-2 mb-12 text-yellow-500 hover:text-yellow-600 font-bold uppercase tracking-widest transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" /> Regresar
+          </button>
+
+          <Reveal type="fade-up">
+            <div className="text-yellow-500 mb-6">
+              <Icon className="w-10 h-10" />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-tight">
+              {activeService.category}
+            </h1>
+            <p className={cn("text-xl md:text-2xl font-medium mb-12 leading-relaxed", textMuted)}>
+              {activeService.description}
+            </p>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 gap-16 mt-16">
+            <Reveal type="fade-left" delay={200}>
+              <h3 className="text-2xl font-bold mb-6 uppercase tracking-widest">
+                Ejecución Estratégica
+              </h3>
+              <p className={cn("text-lg leading-relaxed", textMuted)}>
+                {activeService.details}
+              </p>
+            </Reveal>
+
+            <Reveal type="fade-up" delay={400}>
+              <div
+                className={cn(
+                  "p-8 border-2 rounded-xl",
+                  isDark
+                    ? "border-yellow-500/30 bg-black/50"
+                    : "border-yellow-500 bg-yellow-50/50"
+                )}
+              >
+                <h3 className="text-xl font-bold mb-6 uppercase tracking-widest">
+                  Entregables
+                </h3>
+                <ul className="space-y-4">
+                  {activeService.items.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-6 h-6 text-yellow-500 flex-shrink-0" />
+                      <span className="font-medium">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => setCurrentView("contact")}
+                  className="mt-10 w-full py-4 bg-yellow-500 text-black font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors"
+                >
+                  Solicitar Implementación
+                </button>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const ContactView = () => (
+    <div className={cn("min-h-screen pt-32 pb-24 px-8", bgMain, textMain)}>
+      <div className="container mx-auto max-w-4xl">
+        <button
+          onClick={() => setCurrentView("home")}
+          className="flex items-center gap-2 mb-12 text-yellow-500 hover:text-yellow-600 font-bold uppercase tracking-widest transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" /> Regresar
+        </button>
+
+        <Reveal type="fade-up">
+          <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter mb-8 leading-tight">
+            Contacto
+          </h1>
+          <p className={cn("text-lg leading-relaxed", textMuted)}>
+            Placeholder: aquí va un formulario o CTA a WhatsApp/correo.
+          </p>
+          <a
+            href="mailto:hola@blackintelligencemarketing.com"
+            className="mt-10 inline-flex items-center gap-2 rounded-full bg-yellow-500 px-6 py-3 text-black font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors"
+          >
+            Escribir email <ChevronRight className="w-5 h-5" />
+          </a>
+        </Reveal>
+      </div>
+    </div>
+  );
+
+  const HomeView = () => (
+    <div className={cn("min-h-screen", bgMain, textMain)}>
+      <div className="relative overflow-hidden">
         <NeuronBackground theme={theme} />
 
         <header className="relative z-10">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
             <div className="font-mono text-sm tracking-tight">
               <span className={cn("font-semibold", isDark ? "text-white" : "text-black")}>
                 Black Intelligence Marketing
               </span>
-              <span className={cn("ml-3", isDark ? "text-white/60" : "text-black/60")}>
-                Blindaje · Conversación · Core Digital
-              </span>
             </div>
-
-            <div className="flex items-center gap-2">
-              <IconButton
-                onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-                title="Cambiar tema"
-              >
-                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </IconButton>
-              <IconButton
-                onClick={() => setCompact((v) => !v)}
-                title={compact ? "Vista normal" : "Vista compacta"}
-              >
-                {compact ? (
-                  <Maximize2 className="h-5 w-5" />
-                ) : (
-                  <Minimize2 className="h-5 w-5" />
-                )}
-              </IconButton>
-            </div>
+            <button
+              onClick={toggleTheme}
+              className={cn(
+                "inline-flex items-center justify-center rounded-full border px-3 py-3 backdrop-blur",
+                isDark ? "border-white/10 bg-white/5 text-white" : "border-black/10 bg-black/5 text-black"
+              )}
+              title="Cambiar tema"
+            >
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
           </div>
         </header>
 
         <main className="relative z-10">
-          <section className="mx-auto max-w-6xl px-4 pb-16 pt-10">
+          <section className="mx-auto max-w-6xl px-6 pb-16 pt-16">
             <Reveal>
-              <h1
-                className={cn(
-                  "font-mono text-4xl font-semibold leading-tight tracking-tight sm:text-5xl",
-                  isDark ? "text-white" : "text-black"
-                )}
-              >
+              <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-tight">
                 Inteligencia digital para dominar la percepción.
               </h1>
             </Reveal>
 
             <Reveal delay={120}>
-              <p
-                className={cn(
-                  "mt-5 max-w-2xl font-mono text-sm leading-relaxed",
-                  isDark ? "text-white/70" : "text-black/70"
-                )}
-              >
-                Versión inicial con placeholders + motor visual (neuronas). Lo
-                dejamos exacto cuando me pegues el archivo completo.
+              <p className={cn("mt-6 max-w-2xl text-lg leading-relaxed", textMuted)}>
+                Selecciona un servicio para ver el detalle. (Implementación basada
+                en tu snippet.)
               </p>
             </Reveal>
 
             <div className="mt-10 flex items-center gap-3">
               <a
                 href="#servicios"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 font-mono text-sm text-white/80 hover:bg-white/10"
-              >
-                Ver servicios <ArrowDown className="h-4 w-4" />
-              </a>
-              <a
-                href="mailto:hola@blackintelligencemarketing.com"
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-sm",
-                  isDark
-                    ? "bg-white text-black hover:bg-white/90"
-                    : "bg-black text-white hover:bg-black/90"
+                  "inline-flex items-center gap-2 rounded-full border px-6 py-3 font-bold uppercase tracking-widest",
+                  isDark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-black/5 hover:bg-black/10"
                 )}
               >
-                Solicitar contacto <ChevronRight className="h-4 w-4" />
+                Ver servicios <ArrowDown className="h-5 w-5" />
               </a>
+              <button
+                onClick={() => setCurrentView("contact")}
+                className="inline-flex items-center gap-2 rounded-full bg-yellow-500 px-6 py-3 text-black font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors"
+              >
+                Contacto <ChevronRight className="h-5 w-5" />
+              </button>
             </div>
           </section>
 
-          <section id="servicios" className="mx-auto max-w-6xl px-4 pb-20">
-            <Reveal>
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <div
-                    className={cn(
-                      "font-mono text-xs uppercase tracking-widest",
-                      isDark ? "text-white/50" : "text-black/50"
-                    )}
-                  >
-                    Servicios
-                  </div>
-                  <h2
-                    className={cn(
-                      "mt-2 font-mono text-2xl font-semibold",
-                      isDark ? "text-white" : "text-black"
-                    )}
-                  >
-                    Áreas de intervención
-                  </h2>
-                </div>
-
-                <div
-                  className={cn(
-                    "hidden items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs sm:flex",
-                    isDark
-                      ? "border-white/10 bg-white/5 text-white/70"
-                      : "border-black/10 bg-black/5 text-black/70"
-                  )}
-                >
-                  <Lightbulb className="h-4 w-4" />
-                  Click en un servicio para ver detalles
-                </div>
-              </div>
-            </Reveal>
-
-            <div className={cn("mt-8 grid gap-6", compact ? "md:grid-cols-3" : "md:grid-cols-2")}>
+          <section id="servicios" className="mx-auto max-w-6xl px-6 pb-24">
+            <div className="grid gap-6 md:grid-cols-2">
               {servicesData.map((s, idx) => {
                 const Icon = s.icon;
                 return (
-                  <Reveal key={s.id} delay={idx * 60}>
+                  <Reveal key={s.id} delay={idx * 80}>
                     <button
-                      type="button"
-                      onClick={() => setActiveId(s.id)}
+                      onClick={() => openService(s)}
                       className={cn(
-                        "group w-full rounded-card border p-7 text-left shadow-soft transition-colors",
-                        isDark
-                          ? "border-white/10 bg-bim-panel hover:bg-white/5"
-                          : "border-black/10 bg-white hover:bg-black/5"
+                        "w-full rounded-2xl border p-8 text-left transition-colors",
+                        borderSubtle,
+                        bgCard,
+                        isDark ? "hover:bg-white/5" : "hover:bg-black/5"
                       )}
                     >
-                      <Icon className={cn("h-8 w-8", isDark ? "text-white" : "text-black")} />
-                      <div className={cn("mt-4 font-mono text-lg font-semibold", isDark ? "text-white" : "text-black")}>
+                      <div className="text-yellow-500 mb-6">
+                        <Icon className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-black uppercase tracking-tight">
                         {s.category}
-                      </div>
-                      <div className={cn("mt-2 font-mono text-sm", isDark ? "text-white/65" : "text-black/65")}>
+                      </h3>
+                      <p className={cn("mt-4 text-base leading-relaxed", textMuted)}>
                         {s.description}
-                      </div>
-                      <div className={cn("mt-5 inline-flex items-center gap-2 font-mono text-xs", isDark ? "text-white/60" : "text-black/60")}>
-                        Ver detalles <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </p>
+                      <div className="mt-6 inline-flex items-center gap-2 text-yellow-500 font-bold uppercase tracking-widest">
+                        Ver detalle <ChevronRight className="w-5 h-5" />
                       </div>
                     </button>
                   </Reveal>
                 );
               })}
             </div>
-
-            {activeService && (
-              <div className="mt-10 rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
-                <div className="flex items-start justify-between gap-6">
-                  <div>
-                    <div className="font-mono text-xl font-semibold text-white">
-                      {activeService.category}
-                    </div>
-                    <div className="mt-2 max-w-3xl font-mono text-sm text-white/70">
-                      {activeService.details}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveId(null)}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Cerrar
-                  </button>
-                </div>
-
-                <div className="mt-6 grid gap-2 sm:grid-cols-2">
-                  {activeService.items.map((it) => (
-                    <div key={it} className="flex items-start gap-2 font-mono text-sm text-white/80">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 text-white/60" />
-                      <span>{it}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </section>
         </main>
 
-        <footer className="relative z-10 border-t border-white/10">
-          <div className="mx-auto max-w-6xl px-4 py-10">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-              <div className="font-mono text-sm text-white/60">
-                © {new Date().getFullYear()} Black Intelligence Marketing
-              </div>
-              <a
-                href="mailto:hola@blackintelligencemarketing.com"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 font-mono text-sm text-white/80 hover:bg-white/10"
-              >
-                hola@blackintelligencemarketing.com <ChevronRight className="h-4 w-4" />
-              </a>
+        <footer className={cn("relative z-10 border-t", borderSubtle)}>
+          <div className="mx-auto max-w-6xl px-6 py-10">
+            <div className={cn("text-sm", textMuted)}>
+              © {new Date().getFullYear()} Black Intelligence Marketing
             </div>
           </div>
         </footer>
       </div>
     </div>
+  );
+
+  return currentView === "home" ? (
+    <HomeView />
+  ) : currentView === "service" ? (
+    <ServiceView />
+  ) : (
+    <ContactView />
   );
 }
