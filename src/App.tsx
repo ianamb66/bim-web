@@ -6,6 +6,9 @@ import {
   ChevronRight,
   Sun,
   Moon,
+  Minimize2,
+  Lightbulb,
+  Maximize2,
 } from "lucide-react";
 
 import { Reveal } from "./components/Reveal";
@@ -426,20 +429,86 @@ export default function App() {
             </Reveal>
 
             <Reveal type="fade-up" delay={200}>
-              <div
-                className={cn(
-                  "rounded-2xl border p-8",
-                  borderSubtle,
-                  isDark ? "bg-black/40" : "bg-white"
-                )}
-              >
-                <p className={cn("text-base leading-relaxed", textMuted)}>
-                  Placeholder: aquí va el segundo bloque (metodología / proceso /
-                  casos) que sigue en tu snippet.
-                </p>
+              <div className="relative border-l-2 border-yellow-500/30 pl-8 space-y-12 py-4">
+                {/* Flecha indicadora */}
+                <div className="absolute left-[-17px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[15px] border-t-transparent border-l-[16px] border-l-yellow-500 border-b-[15px] border-b-transparent hidden md:block" />
+
+                <div className="mb-4">
+                  <p className={cn("font-medium mb-8", textMain)}>
+                    Metodología propia para identificación de audiencias y
+                    amplificación de contenidos.
+                  </p>
+                </div>
+
+                <div className="relative space-y-10">
+                  <div className="flex items-start gap-4 group">
+                    <Minimize2 className="w-8 h-8 text-yellow-500 flex-shrink-0 transition-transform group-hover:scale-110" />
+                    <div>
+                      <h3 className="text-xl font-bold text-yellow-500 mb-2 tracking-wide">
+                        IN PUT
+                      </h3>
+                      <p className={cn("text-sm", textMuted)}>
+                        Recopilación masiva de información en tiempo real.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <Lightbulb className="w-8 h-8 text-yellow-500 flex-shrink-0 transition-transform group-hover:scale-110" />
+                    <div>
+                      <h3 className="text-xl font-bold text-yellow-500 mb-2 tracking-wide">
+                        INSIGHTS
+                      </h3>
+                      <p className={cn("text-sm", textMuted)}>
+                        Procesamiento de data, cruce de variables y creación de
+                        accionables.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <Maximize2 className="w-8 h-8 text-yellow-500 flex-shrink-0 transition-transform group-hover:scale-110" />
+                    <div>
+                      <h3 className="text-xl font-bold text-yellow-500 mb-2 tracking-wide">
+                        OUT PUT
+                      </h3>
+                      <p className={cn("text-sm", textMuted)}>
+                        Salidas estratégicas de información y amplificación del
+                        mensaje.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Reveal>
           </div>
+        </div>
+
+        {isDark && (
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/10 via-transparent to-transparent pointer-events-none" />
+        )}
+      </section>
+
+      {/* TÍTULO INTERMEDIO DINÁMICO */}
+      <section className={cn("py-32 px-8 border-b", bgSection, borderSubtle)}>
+        <div className="container mx-auto">
+          <Reveal type="scale">
+            <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-4xl">
+              <span className="block mb-4 text-yellow-500">● Domina el</span>
+              <span className="block">Algoritmo.</span>
+            </h2>
+            <p className={cn("mt-8 text-xl max-w-2xl font-medium", textMuted)}>
+              Combinamos expertise profundo en SEO, estrategia inteligente y
+              análisis de datos para blindar tu marca, controlar la conversación
+              y asegurar que tu mensaje sea el único que importe.
+            </p>
+            <button
+              onClick={() => setCurrentView("contact")}
+              className="mt-12 text-yellow-500 font-bold tracking-widest uppercase flex items-center gap-2 hover:gap-6 transition-all"
+            >
+              [ Iniciar Diagnóstico ] <ChevronRight className="w-6 h-6" />
+            </button>
+          </Reveal>
         </div>
       </section>
 
