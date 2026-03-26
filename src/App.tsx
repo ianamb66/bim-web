@@ -239,6 +239,7 @@ export default function App() {
       >
         <NeuronBackground theme={theme} />
 
+        {/* Main Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center flex-grow px-4 text-center w-full mt-8 md:mt-0">
           <Reveal type="fade-up" delay={100}>
             <h2 className="text-sm md:text-xl font-bold tracking-[0.3em] uppercase mb-4 text-yellow-500 drop-shadow-md">
@@ -308,22 +309,137 @@ export default function App() {
             </div>
           </Reveal>
         </div>
+
+        {/* BOTTOM BAR (curva + botón + métricas) */}
+        <div
+          className={cn(
+            "relative z-20 w-full border-t transition-colors duration-500 mt-auto",
+            bgSection,
+            borderSubtle
+          )}
+        >
+          {/* Corte curvo superior central */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[99%] w-32 h-16 overflow-hidden flex justify-center pointer-events-none">
+            <svg
+              viewBox="0 0 100 50"
+              preserveAspectRatio="none"
+              className={cn(
+                "w-full h-full",
+                isDark ? "fill-[#020202]" : "fill-white"
+              )}
+            >
+              <path d="M0,50 Q50,50 50,0 Q50,50 100,50 Z" />
+            </svg>
+
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("about")?.scrollIntoView({
+                  behavior: "smooth",
+                })
+              }
+              className="absolute top-2 w-12 h-12 bg-yellow-500 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer shadow-[0_0_20px_rgba(234,179,8,0.5)] pointer-events-auto"
+              aria-label="Scroll a sección Nosotros"
+            >
+              <ArrowDown className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="container mx-auto px-4 py-8 relative z-30">
+            <div
+              className={cn(
+                "grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left divide-x",
+                isDark ? "divide-gray-800" : "divide-gray-300"
+              )}
+            >
+              <div className="px-4">
+                <p className="text-[10px] md:text-xs uppercase tracking-widest text-yellow-500 mb-2 font-bold">
+                  Enfoque
+                </p>
+                <p className="text-lg md:text-2xl font-black tracking-tight">
+                  Reputación Digital
+                </p>
+              </div>
+              <div className="px-4">
+                <p className="text-[10px] md:text-xs uppercase tracking-widest text-yellow-500 mb-2 font-bold">
+                  Metodología
+                </p>
+                <p className="text-lg md:text-2xl font-black tracking-tight">
+                  Control & Blindaje
+                </p>
+              </div>
+              <div className="px-4 hidden md:block">
+                <p className="text-[10px] md:text-xs uppercase tracking-widest text-yellow-500 mb-2 font-bold">
+                  Alcance
+                </p>
+                <p className="text-lg md:text-2xl font-black tracking-tight">
+                  Posicionamiento SEO
+                </p>
+              </div>
+              <div className="px-4 hidden md:block">
+                <p className="text-[10px] md:text-xs uppercase tracking-widest text-yellow-500 mb-2 font-bold">
+                  Impacto
+                </p>
+                <p className="text-lg md:text-2xl font-black tracking-tight">
+                  Prestigio Total
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className={cn("py-24", bgSection)}>
-        <div className="container mx-auto max-w-6xl px-6">
-          <Reveal>
-            <h3 className={cn("text-4xl md:text-5xl font-black uppercase tracking-tighter", textMain)}>
-              Nosotros
-            </h3>
-          </Reveal>
-          <Reveal delay={160}>
-            <p className={cn("mt-6 max-w-3xl text-lg leading-relaxed", textMuted)}>
-              Placeholder: aquí va el manifiesto BIM, enfoque de discreción,
-              metodología y por qué ustedes controlan la narrativa.
-            </p>
-          </Reveal>
+      {/* SECCIÓN ¿QUÉ HACEMOS? */}
+      <section
+        id="about"
+        className={cn(
+          "relative py-32 px-8 overflow-hidden border-b",
+          bgMain,
+          borderSubtle
+        )}
+      >
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <Reveal type="fade-left">
+              <div>
+                <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter uppercase">
+                  ¿Qué hacemos?
+                </h2>
+                <p
+                  className={cn(
+                    "text-lg md:text-xl leading-relaxed max-w-lg",
+                    textMuted
+                  )}
+                >
+                  A partir de{" "}
+                  <span className={cn("font-bold", textMain)}>
+                    diversas herramientas de recolección e interpretación de data
+                  </span>{" "}
+                  cualitativa y cuantitativa,{" "}
+                  <span className="text-yellow-500 font-bold">
+                    observamos, recolectamos y analizamos
+                  </span>{" "}
+                  el comportamiento digital de los posibles votantes y
+                  audiencias.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal type="fade-up" delay={200}>
+              <div
+                className={cn(
+                  "rounded-2xl border p-8",
+                  borderSubtle,
+                  isDark ? "bg-black/40" : "bg-white"
+                )}
+              >
+                <p className={cn("text-base leading-relaxed", textMuted)}>
+                  Placeholder: aquí va el segundo bloque (metodología / proceso /
+                  casos) que sigue en tu snippet.
+                </p>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
