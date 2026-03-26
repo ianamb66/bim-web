@@ -121,29 +121,102 @@ export default function App() {
   };
 
   const ContactView = () => (
-    <div className={cn("min-h-screen pt-32 pb-24 px-8", bgMain, textMain)}>
-      <div className="container mx-auto max-w-4xl">
+    <div
+      className={cn(
+        "min-h-screen pt-32 pb-24 px-8 flex items-center",
+        bgMain,
+        textMain
+      )}
+    >
+      <div className="container mx-auto max-w-6xl">
         <button
           onClick={() => setCurrentView("home")}
           className="flex items-center gap-2 mb-12 text-yellow-500 hover:text-yellow-600 font-bold uppercase tracking-widest transition-colors"
         >
-          <ArrowLeft className="w-5 h-5" /> Regresar
+          <ArrowLeft className="w-5 h-5" /> Volver al Inicio
         </button>
 
-        <Reveal type="fade-up">
-          <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter mb-8 leading-tight">
-            Contacto
-          </h1>
-          <p className={cn("text-lg leading-relaxed", textMuted)}>
-            Placeholder: aquí va un formulario o CTA a WhatsApp/correo.
-          </p>
-          <a
-            href="mailto:hola@blackintelligencemarketing.com"
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-yellow-500 px-6 py-3 text-black font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors"
-          >
-            Escribir email <ChevronRight className="w-5 h-5" />
-          </a>
-        </Reveal>
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <Reveal type="fade-left">
+            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-6">
+              Inicia tu <br />
+              <span className="text-yellow-500">Blindaje.</span>
+            </h1>
+            <p className={cn("text-xl font-medium mb-12 max-w-md", textMuted)}>
+              Agenda una sesión confidencial de diagnóstico con nuestros
+              directores de estrategia. La discreción es absoluta.
+            </p>
+
+            <div className="space-y-6">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-yellow-500 mb-1">
+                  Email Directo
+                </p>
+                <p className="text-2xl font-medium">estrategia@bim.agency</p>
+              </div>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-yellow-500 mb-1">
+                  Línea Cifrada
+                </p>
+                <p className="text-2xl font-medium">+52 55 1234 5678</p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal type="scale" delay={300}>
+            <form
+              className={cn(
+                "p-10 border shadow-2xl space-y-6",
+                borderSubtle,
+                bgCard
+              )}
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-2">
+                  Nombre / Entidad
+                </label>
+                <input
+                  type="text"
+                  className={cn(
+                    "w-full p-4 bg-transparent border focus:border-yellow-500 outline-none transition-colors",
+                    borderSubtle
+                  )}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-2">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  className={cn(
+                    "w-full p-4 bg-transparent border focus:border-yellow-500 outline-none transition-colors",
+                    borderSubtle
+                  )}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-2">
+                  Situación / Requerimiento
+                </label>
+                <textarea
+                  rows={4}
+                  className={cn(
+                    "w-full p-4 bg-transparent border focus:border-yellow-500 outline-none transition-colors resize-none",
+                    borderSubtle
+                  )}
+                />
+              </div>
+
+              <button className="w-full py-4 bg-yellow-500 text-black font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors">
+                Enviar Solicitud Segura
+              </button>
+            </form>
+          </Reveal>
+        </div>
       </div>
     </div>
   );
