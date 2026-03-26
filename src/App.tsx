@@ -512,42 +512,92 @@ export default function App() {
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* GRID DE SERVICIOS INTERACTIVA */}
       <section id="services" className={cn("py-24", bgMain)}>
-        <div className="container mx-auto max-w-6xl px-6">
-          <Reveal>
-            <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">
-              Servicios
-            </h3>
+        <div className="container mx-auto px-8">
+          <Reveal type="fade-up">
+            <div
+              className={cn(
+                "mb-16 flex flex-col md:flex-row justify-between items-end border-b pb-8",
+                borderSubtle
+              )}
+            >
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight">
+                Capacidades
+                <br />
+                <span className="text-yellow-500">Estratégicas</span>
+              </h2>
+              <p
+                className={cn(
+                  "text-lg font-medium max-w-sm text-right mt-4 md:mt-0",
+                  textMuted
+                )}
+              >
+                Selecciona un servicio para ver los detalles y arquitectura de
+                ejecución.
+              </p>
+            </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {servicesData.map((s, idx) => {
-              const Icon = s.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {servicesData.map((service, index) => {
+              const Icon = service.icon;
               return (
-                <Reveal key={s.id} delay={idx * 80}>
-                  <button
-                    onClick={() => openService(s)}
+                <Reveal key={service.id} type="fade-up" delay={index * 100}>
+                  <div
+                    onClick={() => openService(service)}
                     className={cn(
-                      "w-full rounded-2xl border p-8 text-left transition-colors",
-                      borderSubtle,
+                      "group h-full p-8 md:p-10 border hover:border-yellow-500 transition-all duration-500 cursor-pointer flex flex-col justify-between shadow-lg hover:shadow-yellow-500/20",
                       bgCard,
-                      isDark ? "hover:bg-white/5" : "hover:bg-black/5"
+                      borderSubtle
                     )}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") openService(service);
+                    }}
                   >
-                    <div className="text-yellow-500 mb-6">
-                      <Icon className="w-8 h-8" />
+                    <div className="transform group-hover:-translate-y-2 transition-transform duration-500">
+                      <div className="text-yellow-500 bg-yellow-500/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
+                        <Icon className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">
+                        {service.category}
+                      </h3>
+                      <p
+                        className={cn(
+                          "text-sm mb-6 font-medium line-clamp-3",
+                          textMuted
+                        )}
+                      >
+                        {service.description}
+                      </p>
+                      <ul className="space-y-3 mb-8">
+                        {service.items.slice(0, 3).map((item) => (
+                          <li
+                            key={item}
+                            className={cn(
+                              "flex items-start text-xs font-bold uppercase tracking-wider transition-colors",
+                              textMuted,
+                              isDark
+                                ? "group-hover:text-white"
+                                : "group-hover:text-gray-900"
+                            )}
+                          >
+                            <span className="mr-2 mt-0.5 block w-1.5 h-1.5 bg-yellow-500 rounded-full flex-shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                        <li className="text-xs font-bold text-yellow-500 mt-2 italic">
+                          + Ver más...
+                        </li>
+                      </ul>
                     </div>
-                    <h4 className="text-2xl font-black uppercase tracking-tight">
-                      {s.category}
-                    </h4>
-                    <p className={cn("mt-4 text-base leading-relaxed", textMuted)}>
-                      {s.description}
-                    </p>
-                    <div className="mt-6 inline-flex items-center gap-2 text-yellow-500 font-bold uppercase tracking-widest">
-                      Ver detalle <ChevronRight className="w-5 h-5" />
+
+                    <div className="mt-auto flex items-center text-yellow-500 font-bold uppercase tracking-widest text-sm group-hover:gap-2 transition-all">
+                      Explorar <ChevronRight className="w-4 h-4" />
                     </div>
-                  </button>
+                  </div>
                 </Reveal>
               );
             })}
