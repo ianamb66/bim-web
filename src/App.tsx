@@ -605,10 +605,76 @@ export default function App() {
         </div>
       </section>
 
-      <footer className={cn("border-t", borderSubtle, bgMain)}>
-        <div className="container mx-auto max-w-6xl px-6 py-10">
-          <div className={cn("text-sm", textMuted)}>
-            © {new Date().getFullYear()} Black Intelligence Marketing
+      {/* FOOTER GLOBAL */}
+      <footer
+        className={cn(
+          bgSection,
+          "pt-32 pb-12 px-8 border-t",
+          isDark ? "border-yellow-500/20" : "border-gray-300"
+        )}
+      >
+        <div className="container mx-auto">
+          <Reveal type="scale">
+            <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-12">
+              Hablemos.
+            </h2>
+          </Reveal>
+
+          <div
+            className={cn(
+              "grid grid-cols-1 md:grid-cols-3 gap-12 border-t pt-12",
+              borderSubtle
+            )}
+          >
+            <div>
+              <h4 className="text-xl font-bold mb-4 text-yellow-500">BIM Agency</h4>
+              <p className={cn("font-medium", textMuted)}>
+                Blindaje, Marketing y Prestigio Digital para marcas que exigen la
+                excelencia.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-xl font-bold mb-4 text-yellow-500">Contacto</h4>
+              <p
+                className={cn(
+                  textMuted,
+                  "hover:text-yellow-500 cursor-pointer transition-colors mb-2 font-bold"
+                )}
+              >
+                estrategia@bim.agency
+              </p>
+              <p
+                className={cn(
+                  textMuted,
+                  "hover:text-yellow-500 cursor-pointer transition-colors font-bold"
+                )}
+              >
+                +52 55 1234 5678
+              </p>
+            </div>
+
+            <div className="text-right md:text-left">
+              <button
+                onClick={() => setCurrentView("contact")}
+                className="bg-yellow-500 text-black px-8 py-4 font-bold uppercase tracking-widest hover:bg-yellow-400 transition-colors w-full md:w-auto shadow-lg shadow-yellow-500/30"
+              >
+                Solicitar Auditoría
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "mt-24 pt-8 border-t text-xs font-bold flex flex-col md:flex-row justify-between uppercase tracking-widest gap-4",
+              borderSubtle,
+              textMuted
+            )}
+          >
+            <p>© {new Date().getFullYear()} BIM. Todos los derechos reservados.</p>
+            <p className="hover:text-yellow-500 cursor-pointer transition-colors">
+              Aviso de Privacidad / Términos
+            </p>
           </div>
         </div>
       </footer>
