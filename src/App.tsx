@@ -1,270 +1,257 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
-  ArrowRight,
-  BadgeCheck,
-  BarChart3,
-  Building2,
+  ArrowDown,
   ChevronRight,
-  Globe,
-  Mail,
-  Sparkles,
+  Minimize2,
+  Maximize2,
+  Sun,
+  Moon,
+  ArrowLeft,
+  CheckCircle2,
+  Lightbulb,
 } from "lucide-react";
 
-const EMAIL = "hola@blackintelligencemarketing.com";
+import { Reveal } from "./components/Reveal";
+import { NeuronBackground } from "./components/NeuronBackground";
+import { servicesData } from "./data/services";
 
-function Pill({
-  children,
-  href,
-  className = "",
-}: {
-  children: React.ReactNode;
-  href?: string;
-  className?: string;
-}) {
-  const Comp: any = href ? "a" : "div";
-  return (
-    <Comp
-      href={href}
-      target={href ? "_blank" : undefined}
-      rel={href ? "noopener noreferrer" : undefined}
-      className={
-        "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/80 backdrop-blur-sm hover:bg-white/10 transition-colors " +
-        className
-      }
-    >
-      {children}
-    </Comp>
-  );
+function cn(...classes: Array<string | undefined | false | null>) {
+  return classes.filter(Boolean).join(" ");
 }
 
-function Button({
+function IconButton({
+  onClick,
   children,
-  href,
-  variant = "primary",
-}: {
-  children: React.ReactNode;
-  href?: string;
-  variant?: "primary" | "ghost";
-}) {
-  const Comp: any = href ? "a" : "button";
-  const base =
-    "inline-flex items-center justify-center rounded-full px-5 py-3 font-mono text-sm transition-colors";
-  const styles =
-    variant === "primary"
-      ? "bg-white text-black hover:bg-white/90"
-      : "bg-white/10 text-white hover:bg-white/15 border border-white/10";
-  return (
-    <Comp
-      href={href}
-      target={href ? "_blank" : undefined}
-      rel={href ? "noopener noreferrer" : undefined}
-      className={`${base} ${styles}`}
-    >
-      {children}
-    </Comp>
-  );
-}
-
-function Card({
   title,
-  desc,
-  icon,
-  bullets,
 }: {
+  onClick: () => void;
+  children: React.ReactNode;
   title: string;
-  desc: string;
-  icon: React.ReactNode;
-  bullets: string[];
 }) {
   return (
-    <div className="rounded-card border border-white/10 bg-bim-panel p-7 shadow-soft">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="font-mono text-lg font-semibold text-bim-text">
-            {title}
-          </div>
-          <div className="mt-2 font-mono text-sm text-bim-muted">{desc}</div>
-        </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white">
-          {icon}
-        </div>
-      </div>
-      <ul className="mt-5 space-y-2 font-mono text-sm text-bim-muted">
-        {bullets.map((b) => (
-          <li key={b} className="flex items-start gap-2">
-            <BadgeCheck className="mt-0.5 h-4 w-4 text-white/70" />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-3 text-white/80 hover:bg-white/10"
+    >
+      {children}
+    </button>
   );
 }
 
 export default function App() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [compact, setCompact] = useState(false);
+
+  const activeService = useMemo(
+    () => servicesData.find((s) => s.id === activeId) ?? null,
+    [activeId]
+  );
+
+  const isDark = theme === "dark";
+
   return (
-    <div className="min-h-screen bg-bim-bg text-bim-text">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-bim-bg/70 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="font-mono text-sm font-semibold tracking-tight">
+    <div className={cn("min-h-screen", isDark ? "bg-bim-bg" : "bg-white")}> 
+      <div className={cn("relative overflow-hidden", isDark ? "text-bim-text" : "text-black")}> 
+        <NeuronBackground theme={theme} />
+
+        <header className="relative z-10">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6">
+            <div className="font-mono text-sm tracking-tight">
+              <span className={cn("font-semibold", isDark ? "text-white" : "text-black")}>
                 Black Intelligence Marketing
-              </div>
-              <div className="font-mono text-[11px] text-white/60">
-                Servicios · Performance · Web · Creativo
-              </div>
+              </span>
+              <span className={cn("ml-3", isDark ? "text-white/60" : "text-black/60")}>
+                Blindaje · Conversación · Core Digital
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <IconButton
+                onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+                title="Cambiar tema"
+              >
+                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </IconButton>
+              <IconButton
+                onClick={() => setCompact((v) => !v)}
+                title={compact ? "Vista normal" : "Vista compacta"}
+              >
+                {compact ? (
+                  <Maximize2 className="h-5 w-5" />
+                ) : (
+                  <Minimize2 className="h-5 w-5" />
+                )}
+              </IconButton>
             </div>
           </div>
-          <div className="hidden items-center gap-2 sm:flex">
-            <Pill href={`mailto:${EMAIL}`}>
-              <Mail className="h-4 w-4" />
-              {EMAIL}
-            </Pill>
-            <Button href={`mailto:${EMAIL}`} variant="ghost">
-              Contacto <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <main>
-        <section className="mx-auto max-w-6xl px-4 py-14">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <div className="rounded-[28px] border border-white/10 bg-bim-panel p-10 shadow-soft">
-                <div className="flex flex-wrap gap-2">
-                  <Pill>
-                    <Building2 className="h-4 w-4" />
-                    BIM
-                  </Pill>
-                  <Pill>
-                    <Globe className="h-4 w-4" />
-                    CDMX · Remote
-                  </Pill>
-                </div>
+        <main className="relative z-10">
+          <section className="mx-auto max-w-6xl px-4 pb-16 pt-10">
+            <Reveal>
+              <h1
+                className={cn(
+                  "font-mono text-4xl font-semibold leading-tight tracking-tight sm:text-5xl",
+                  isDark ? "text-white" : "text-black"
+                )}
+              >
+                Inteligencia digital para dominar la percepción.
+              </h1>
+            </Reveal>
 
-                <h1 className="mt-7 font-mono text-4xl font-semibold leading-tight tracking-tight">
-                  Marketing sin humo.
-                  <span className="block text-white/70">Ejecución rápida.</span>
-                </h1>
+            <Reveal delay={120}>
+              <p
+                className={cn(
+                  "mt-5 max-w-2xl font-mono text-sm leading-relaxed",
+                  isDark ? "text-white/70" : "text-black/70"
+                )}
+              >
+                Versión inicial con placeholders + motor visual (neuronas). Lo
+                dejamos exacto cuando me pegues el archivo completo.
+              </p>
+            </Reveal>
 
-                <p className="mt-5 max-w-xl font-mono text-sm leading-relaxed text-bim-muted">
-                  Landing lista para venta: servicios claros, entregables, y
-                  contacto directo. Aquí ponemos placeholders y lo afinamos con
-                  casos y oferta final.
-                </p>
+            <div className="mt-10 flex items-center gap-3">
+              <a
+                href="#servicios"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 font-mono text-sm text-white/80 hover:bg-white/10"
+              >
+                Ver servicios <ArrowDown className="h-4 w-4" />
+              </a>
+              <a
+                href="mailto:hola@blackintelligencemarketing.com"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-sm",
+                  isDark
+                    ? "bg-white text-black hover:bg-white/90"
+                    : "bg-black text-white hover:bg-black/90"
+                )}
+              >
+                Solicitar contacto <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
+          </section>
 
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Button href={`mailto:${EMAIL}`}>
-                    Pedir propuesta <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button
-                    href="#servicios"
-                    variant="ghost"
+          <section id="servicios" className="mx-auto max-w-6xl px-4 pb-20">
+            <Reveal>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div
+                    className={cn(
+                      "font-mono text-xs uppercase tracking-widest",
+                      isDark ? "text-white/50" : "text-black/50"
+                    )}
                   >
-                    Ver servicios <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
+                    Servicios
+                  </div>
+                  <h2
+                    className={cn(
+                      "mt-2 font-mono text-2xl font-semibold",
+                      isDark ? "text-white" : "text-black"
+                    )}
+                  >
+                    Áreas de intervención
+                  </h2>
                 </div>
 
-                <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {[
-                    { k: "Tiempo", v: "24–72h para propuesta" },
-                    { k: "Formato", v: "Retainer o proyecto" },
-                    { k: "Enfoque", v: "ventas / leads" },
-                  ].map((x) => (
-                    <div
-                      key={x.k}
-                      className="rounded-card border border-white/10 bg-white/5 p-5"
+                <div
+                  className={cn(
+                    "hidden items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs sm:flex",
+                    isDark
+                      ? "border-white/10 bg-white/5 text-white/70"
+                      : "border-black/10 bg-black/5 text-black/70"
+                  )}
+                >
+                  <Lightbulb className="h-4 w-4" />
+                  Click en un servicio para ver detalles
+                </div>
+              </div>
+            </Reveal>
+
+            <div className={cn("mt-8 grid gap-6", compact ? "md:grid-cols-3" : "md:grid-cols-2")}>
+              {servicesData.map((s, idx) => {
+                const Icon = s.icon;
+                return (
+                  <Reveal key={s.id} delay={idx * 60}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveId(s.id)}
+                      className={cn(
+                        "group w-full rounded-card border p-7 text-left shadow-soft transition-colors",
+                        isDark
+                          ? "border-white/10 bg-bim-panel hover:bg-white/5"
+                          : "border-black/10 bg-white hover:bg-black/5"
+                      )}
                     >
-                      <div className="font-mono text-xs uppercase tracking-widest text-white/50">
-                        {x.k}
+                      <Icon className={cn("h-8 w-8", isDark ? "text-white" : "text-black")} />
+                      <div className={cn("mt-4 font-mono text-lg font-semibold", isDark ? "text-white" : "text-black")}>
+                        {s.category}
                       </div>
-                      <div className="mt-2 font-mono text-sm text-white/80">
-                        {x.v}
+                      <div className={cn("mt-2 font-mono text-sm", isDark ? "text-white/65" : "text-black/65")}>
+                        {s.description}
                       </div>
+                      <div className={cn("mt-5 inline-flex items-center gap-2 font-mono text-xs", isDark ? "text-white/60" : "text-black/60")}>
+                        Ver detalles <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </button>
+                  </Reveal>
+                );
+              })}
+            </div>
+
+            {activeService && (
+              <div className="mt-10 rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+                <div className="flex items-start justify-between gap-6">
+                  <div>
+                    <div className="font-mono text-xl font-semibold text-white">
+                      {activeService.category}
+                    </div>
+                    <div className="mt-2 max-w-3xl font-mono text-sm text-white/70">
+                      {activeService.details}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveId(null)}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Cerrar
+                  </button>
+                </div>
+
+                <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                  {activeService.items.map((it) => (
+                    <div key={it} className="flex items-start gap-2 font-mono text-sm text-white/80">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 text-white/60" />
+                      <span>{it}</span>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
+          </section>
+        </main>
 
-            <div className="lg:col-span-5">
-              <div className="grid gap-6">
-                <div className="rounded-[28px] border border-white/10 bg-white/5 p-8">
-                  <div className="font-mono text-xs uppercase tracking-widest text-white/50">
-                    Quick offer
-                  </div>
-                  <div className="mt-3 font-mono text-lg font-semibold">
-                    Setup de prospección + CRM mínimo
-                  </div>
-                  <p className="mt-2 font-mono text-sm text-bim-muted">
-                    Para equipos comerciales: base, etapas, mensajes, y control.
-                  </p>
-                  <div className="mt-6">
-                    <Button href={`mailto:${EMAIL}`} variant="ghost">
-                      Quiero esto <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="rounded-[28px] border border-white/10 bg-white/5 p-8">
-                  <div className="font-mono text-xs uppercase tracking-widest text-white/50">
-                    Nota
-                  </div>
-                  <div className="mt-3 font-mono text-sm text-bim-muted">
-                    Placeholder: aquí van casos / logos / testimonios.
-                  </div>
-                </div>
+        <footer className="relative z-10 border-t border-white/10">
+          <div className="mx-auto max-w-6xl px-4 py-10">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <div className="font-mono text-sm text-white/60">
+                © {new Date().getFullYear()} Black Intelligence Marketing
               </div>
+              <a
+                href="mailto:hola@blackintelligencemarketing.com"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 font-mono text-sm text-white/80 hover:bg-white/10"
+              >
+                hola@blackintelligencemarketing.com <ChevronRight className="h-4 w-4" />
+              </a>
             </div>
           </div>
-        </section>
-
-        <section id="servicios" className="mx-auto max-w-6xl px-4 pb-16">
-          <div className="mb-8">
-            <div className="font-mono text-xs uppercase tracking-widest text-white/50">
-              Servicios
-            </div>
-            <h2 className="mt-2 font-mono text-2xl font-semibold">
-              Lo que hacemos
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card
-              title="Performance"
-              desc="Ads + medición + optimización"
-              icon={<BarChart3 className="h-5 w-5" />}
-              bullets={["Setup", "Optimización semanal", "Reporte ejecutivo"]}
-            />
-            <Card
-              title="Web"
-              desc="Landing + conversion"
-              icon={<Globe className="h-5 w-5" />}
-              bullets={["Copy + UI", "Implementación", "SEO básico"]}
-            />
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-white/10">
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-            <div className="font-mono text-sm text-white/70">
-              © {new Date().getFullYear()} Black Intelligence Marketing
-            </div>
-            <div className="flex items-center gap-2">
-              <Button href={`mailto:${EMAIL}`} variant="ghost">
-                {EMAIL} <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
